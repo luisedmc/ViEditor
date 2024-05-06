@@ -20,9 +20,14 @@ public class FileHandler {
         // System.out.println(line);
         dll.Push(line);
       }
+      System.out.println("File read successfully!");
     } catch (IOException e) {
       System.err.println("Error reading the file: " + e.getMessage());
     }
+  }
+
+  int GetFileSize() {
+    return dll.Count();
   }
 
   DoublyLinkedList GetDLL() {

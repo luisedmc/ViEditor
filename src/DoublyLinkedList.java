@@ -40,11 +40,15 @@ public class DoublyLinkedList {
     }
   }
 
+  Node GetHead() {
+    return head;
+  }
+
   private boolean isEmpty() {
     return head == null && tail == null;
   }
 
-  private int count() {
+  int Count() {
     return count;
   }
 
@@ -60,7 +64,7 @@ public class DoublyLinkedList {
 
   // Print detalhado
   void PrintDLL() {
-    System.out.println("Count: " + count());
+    System.out.println("Count: " + Count());
     System.out.println("Head: " + head.getData());
     System.out.println("Tail: " + tail.getData());
 
