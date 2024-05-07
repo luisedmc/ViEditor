@@ -1,7 +1,9 @@
 // Luis Eduardo Meduna C. - 42203341 / 10408871
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileHandler {
@@ -23,6 +25,20 @@ public class FileHandler {
       System.out.println("File read successfully!");
     } catch (IOException e) {
       System.err.println("Error reading the file: " + e.getMessage());
+    }
+  }
+
+  void SaveFile() {
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+      Node currentNode = dll.GetHead();
+      while (currentNode != null) {
+        bw.write(currentNode.getData());
+        bw.newLine();
+        currentNode = currentNode.getNext();
+      }
+      System.out.println("File saved successfully!");
+    } catch (IOException e) {
+      System.err.println("Error saving the file: " + e.getMessage());
     }
   }
 
