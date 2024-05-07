@@ -40,6 +40,41 @@ public class DoublyLinkedList {
     }
   }
 
+  // Remover todos os nodes entre start e end
+  void RemoveFrom(int start, int end) {
+    if (start <= 0 || end <= 0 || start > count || end > count || start > end) {
+      System.out.println("Linhas inválidas!");
+      return;
+    }
+
+    Node curr = head;
+    int lineNumber = 1;
+
+    while (curr != null) {
+      if (lineNumber >= start && lineNumber <= end) {
+        Node prev = curr.getPrevious();
+        Node next = curr.getNext();
+
+        if (prev != null) {
+          prev.setNext(next);
+        } else {
+          head = next;
+        }
+
+        if (next != null) {
+          next.setPrevious(prev);
+        } else {
+          tail = prev;
+        }
+
+        count--;
+      }
+
+      curr = curr.getNext();
+      lineNumber++;
+    }
+  }
+
   Node GetHead() {
     return head;
   }
@@ -65,6 +100,12 @@ public class DoublyLinkedList {
   // Print detalhado
   void PrintDLL() {
     System.out.println("Count: " + Count());
+
+    if (head == null || tail == null) {
+      System.out.println("Empty list.");
+      return;
+    }
+
     System.out.println("Head: " + head.getData());
     System.out.println("Tail: " + tail.getData());
 
