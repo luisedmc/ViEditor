@@ -24,6 +24,31 @@ public class DoublyLinkedList {
     }
   }
 
+  // Insere depois da linha especificada
+  void InsertAfter(Node node, String newData) {
+    if (node == null) {
+      System.out.println("Node de referência inválido!");
+      return;
+    }
+
+    Node newNode = new Node(newData);
+
+    Node nextNode = node.getNext();
+
+    newNode.setNext(nextNode);
+    newNode.setPrevious(node);
+
+    node.setNext(newNode);
+
+    if (nextNode != null) {
+      nextNode.setPrevious(newNode);
+    } else {
+      tail = newNode;
+    }
+
+    count++;
+  }
+
   // Insere no final
   void Push(String data) {
     Node newNode = new Node(data);
