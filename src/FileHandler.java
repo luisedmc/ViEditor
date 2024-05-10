@@ -2,6 +2,7 @@
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,6 +40,16 @@ public class FileHandler {
       System.out.println("File saved successfully!");
     } catch (IOException e) {
       System.err.println("Error saving the file: " + e.getMessage());
+    }
+  }
+
+  void ChangeFileName(String newFileName) {
+    File file = new File(filePath);
+    File newFile = new File(newFileName);
+    if (file.renameTo(newFile)) {
+      System.out.println("File name changed from " + filePath + " to " + newFileName + " successfully!");
+    } else {
+      System.err.println("Error changing the file name!");
     }
   }
 
