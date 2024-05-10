@@ -8,25 +8,58 @@ public class Editor {
   private String cmd;
   private String[] selectedLines;
   private boolean isModified;
+  private boolean isOpened;
 
   Editor(String filePath) {
     file = new FileHandler(filePath);
     scanner = new Scanner(System.in);
     cmd = "";
     isModified = false;
+    isOpened = false;
+  }
+
+  private boolean IsOpened() {
+    return isOpened;
   }
 
   // :e nomeArq.ext
   void OpenFile(String filePath) {
     file = new FileHandler(filePath);
     file.ReadFile();
+    isOpened = true;
     // file.GetDLL().Print();
+  }
+
+  // :w
+  void SaveW() {
+    if (!IsOpened()) {
+      System.out.println("Nenhum arquivo aberto!");
+      return;
+    }
+
+    Save();
   }
 
   // :wq
   void SaveAndExit() {
+    if (!IsOpened()) {
+      System.out.println("Nenhum arquivo aberto!");
+      return;
+    }
+
     Save();
     System.exit(0);
+  }
+
+  // :w nomeArq.ext
+  void SaveAs(String filePath) {
+    if (!IsOpened()) {
+      System.out.println("Nenhum arquivo aberto!");
+      return;
+    }
+
+    file.ChangeFileName(filePath);
+    Save();
   }
 
   // :v LinIni LinFim
@@ -64,7 +97,12 @@ public class Editor {
       return;
     }
 
-    // TODO: Copiar as linhas selecionadas
+    DoublyLinkedList clipboard = new DoublyLinkedList();
+    for (String line : selectedLines) {
+      clipboard.Push(line);
+    }
+
+    System.out.println("Linhas copiadas.");
   }
 
   // :c
@@ -100,6 +138,36 @@ public class Editor {
     // file.GetDLL().Print();
   }
 
+  // :s
+  void Display() {
+    if (!IsOpened()) {
+      System.out.println("Nenhum arquivo aberto!");
+      return;
+    }
+
+    if (file.GetFileSize() == 0) {
+      System.out.println("Arquivo vazio!");
+      return;
+    } else if (file.GetFileSize() <= 10) {
+      file.GetDLL().Print();
+      return;
+    }
+
+    System.out.println("Conteúdo do arquivo:");
+    System.out.println("Pressione Enter para printar as próximas 10 linhas...\n");
+    Node currentNode = file.GetDLL().GetHead();
+    int lineNumber = 1;
+    while (currentNode != null) {
+      String line = currentNode.getData();
+      System.out.println(line);
+      if (lineNumber % 10 == 0) {
+        scanner.nextLine();
+      }
+      currentNode = currentNode.getNext();
+      lineNumber++;
+    }
+  }
+
   // :ZZ
   void Save() {
     if (!isModified) {
@@ -124,9 +192,13 @@ public class Editor {
 
     System.out.println(
         ":e nomeArq.ext - Abrir o arquivo de nome 'nomeArq.ext', armazenar cada linha em um Node da lista encadeada circular.");
+    System.out.println(":w - Salvar o arquivo atual.");
+    System.out.println(":w nomeArq.ext - Salvar o arquivo atual com o nome 'nomeArq.ext'.");
     System.out.println(":q! - Sair do editor sem salvar as modificações realizadas.");
     System.out.println(
         ":v LinIni LinFim - Selecionar as linhas de 'LinIni' a 'LinFim' para realizar operações de copiar ou cortar.");
+    System.out.println(":c - Cortar as linhas selecionadas.");
+    System.out.println(":y - Copiar as linhas selecionadas.");
     System.out.println();
   }
 
@@ -141,12 +213,21 @@ public class Editor {
       switch (parts[0]) {
 
         case ":e":
-          if (parts.length >= 2) { // Check second argument for file name
+          if (parts.length >= 2) { // Segundo argumento para nome do arquivo
             OpenFile(parts[1]);
           } else {
             System.out.println("Usage: :e fileName.txt");
           }
           break;
+
+        case ":w":
+          if (parts.length >= 2) { // Segundo argumento para nome do arquivo
+            SaveAs(parts[1]);
+            break;
+          } else {
+            SaveW();
+            break;
+          }
 
         case ":wq":
           SaveAndExit();
@@ -162,6 +243,14 @@ public class Editor {
 
         case ":c":
           Cut();
+          break;
+
+        case ":s":
+          Display();
+          break;
+
+        case ":y":
+          Copy();
           break;
 
         case ":ZZ":
