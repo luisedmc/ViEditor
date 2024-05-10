@@ -9,6 +9,8 @@ public class Editor {
   private String[] selectedLines;
   private boolean isModified;
   private boolean isOpened;
+  private boolean isCopied;
+  private DoublyLinkedList clipboard;
 
   Editor(String filePath) {
     file = new FileHandler(filePath);
@@ -16,6 +18,7 @@ public class Editor {
     cmd = "";
     isModified = false;
     isOpened = false;
+    isCopied = false;
   }
 
   private boolean IsOpened() {
@@ -97,12 +100,39 @@ public class Editor {
       return;
     }
 
-    DoublyLinkedList clipboard = new DoublyLinkedList();
+    clipboard = new DoublyLinkedList();
     for (String line : selectedLines) {
-      clipboard.Push(line);
+      clipboard.Insert(line);
     }
 
+    isCopied = true;
     System.out.println("Linhas copiadas.");
+  }
+
+  // :p LinIniPaste
+  void Paste(int line) {
+    if (!isCopied) {
+      System.out.println("Nenhuma linha copiada!");
+      return;
+    }
+
+    Node currentNode = file.GetDLL().GetHead();
+    int lineNumber = 1;
+    while (currentNode != null) {
+      if (lineNumber == line) {
+        Node clipboardNode = clipboard.GetHead();
+        while (clipboardNode != null) {
+          file.GetDLL().InsertAfter(currentNode, clipboardNode.getData());
+          clipboardNode = clipboardNode.getNext();
+        }
+        break;
+      }
+      currentNode = currentNode.getNext();
+      lineNumber++;
+    }
+
+    isModified = true;
+    System.out.println("Linhas coladas.");
   }
 
   // :c
@@ -199,6 +229,7 @@ public class Editor {
         ":v LinIni LinFim - Selecionar as linhas de 'LinIni' a 'LinFim' para realizar operações de copiar ou cortar.");
     System.out.println(":c - Cortar as linhas selecionadas.");
     System.out.println(":y - Copiar as linhas selecionadas.");
+    System.out.println(":p LinIniPaste - Colar as linhas copiadas após a linha 'LinIniPaste'.");
     System.out.println();
   }
 
@@ -243,6 +274,14 @@ public class Editor {
 
         case ":c":
           Cut();
+          break;
+
+        case ":p":
+          if (parts.length >= 2) { // Segundo argumento para linha de colagem
+            Paste(Integer.parseInt(parts[1]));
+          } else {
+            System.out.println("Usage: :p LinIniPaste");
+          }
           break;
 
         case ":s":
