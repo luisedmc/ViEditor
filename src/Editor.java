@@ -198,6 +198,32 @@ public class Editor {
     }
   }
 
+  // :s Lin
+  void DisplayLine(int line) {
+    if (!IsOpened()) {
+      System.out.println("Nenhum arquivo aberto!");
+      return;
+    }
+
+    if (line <= 0 || line > file.GetFileSize()) {
+      System.out.println("Linha inválida!");
+      return;
+    }
+
+    Node currentNode = file.GetDLL().GetHead();
+    int lineNumber = 1;
+
+    System.out.println("Conteúdo da linha " + line + ":");
+    while (currentNode != null) {
+      if (lineNumber == line) {
+        System.out.println(currentNode.getData());
+        break;
+      }
+      currentNode = currentNode.getNext();
+      lineNumber++;
+    }
+  }
+
   // :ZZ
   void Save() {
     if (!isModified) {
@@ -230,6 +256,9 @@ public class Editor {
     System.out.println(":c - Cortar as linhas selecionadas.");
     System.out.println(":y - Copiar as linhas selecionadas.");
     System.out.println(":p LinIniPaste - Colar as linhas copiadas após a linha 'LinIniPaste'.");
+    System.out.println(":s - Exibir o conteúdo do arquivo de 10 em 10 linhas.");
+    System.out.println(":s Lin - Exibir a linha 'Lin' do arquivo.");
+
     System.out.println();
   }
 
@@ -285,7 +314,11 @@ public class Editor {
           break;
 
         case ":s":
-          Display();
+          if (parts.length >= 2) { // Segundo argumento para linha de exibição
+            DisplayLine(Integer.parseInt(parts[1]));
+          } else {
+            Display();
+          }
           break;
 
         case ":y":
