@@ -224,6 +224,31 @@ public class Editor {
     }
   }
 
+  // :s LinIni LinFim
+  void DisplayLines(int start, int end) {
+    if (!IsOpened()) {
+      System.out.println("Nenhum arquivo aberto!");
+      return;
+    }
+
+    if (start <= 0 || end <= 0 || start > file.GetFileSize() || end > file.GetFileSize() || start > end) {
+      System.out.println("Linhas inválidas!");
+      return;
+    }
+
+    Node currentNode = file.GetDLL().GetHead();
+    int lineNumber = 1;
+
+    System.out.println("Conteúdo das linhas " + start + " a " + end + ":");
+    while (currentNode != null) {
+      if (lineNumber >= start && lineNumber <= end) {
+        System.out.println(currentNode.getData());
+      }
+      currentNode = currentNode.getNext();
+      lineNumber++;
+    }
+  }
+
   // :ZZ
   void Save() {
     if (!isModified) {
@@ -314,7 +339,9 @@ public class Editor {
           break;
 
         case ":s":
-          if (parts.length >= 2) { // Segundo argumento para linha de exibição
+          if (parts.length >= 3) {
+            DisplayLines(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+          } else if (parts.length >= 2) {
             DisplayLine(Integer.parseInt(parts[1]));
           } else {
             Display();
