@@ -65,6 +65,31 @@ public class DoublyLinkedList {
     }
   }
 
+  // Remove um node especifico
+  void Remove(Node node) {
+    if (node == null) {
+      System.out.println("Node inválido!");
+      return;
+    }
+
+    Node prev = node.getPrevious();
+    Node next = node.getNext();
+
+    if (prev != null) {
+      prev.setNext(next);
+    } else {
+      head = next;
+    }
+
+    if (next != null) {
+      next.setPrevious(prev);
+    } else {
+      tail = prev;
+    }
+
+    count--;
+  }
+
   // Remover todos os nodes entre start e end
   void RemoveFrom(int start, int end) {
     if (start <= 0 || end <= 0 || start > count || end > count || start > end) {
