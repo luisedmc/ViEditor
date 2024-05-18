@@ -304,6 +304,33 @@ public class Editor {
     System.out.println("Linhas a partir da linha " + line + " deletadas.");
   }
 
+  // :XG Lin
+  void DeleteUntilLine(int line) {
+    if (!IsOpened()) {
+      System.out.println("Nenhum arquivo aberto!");
+      return;
+    }
+
+    if (line <= 0 || line > file.GetFileSize()) {
+      System.out.println("Linha inválida!");
+      return;
+    }
+
+    Node currentNode = file.GetDLL().GetHead();
+    int lineNumber = 1;
+
+    while (currentNode != null) {
+      if (lineNumber <= line) {
+        file.GetDLL().Remove(currentNode);
+      }
+      currentNode = currentNode.getNext();
+      lineNumber++;
+    }
+
+    isModified = true;
+    System.out.println("Linhas até a linha " + line + " deletadas.");
+  }
+
   // :ZZ
   void Save() {
     if (!isModified) {
@@ -416,6 +443,14 @@ public class Editor {
             DeleteFromLine(Integer.parseInt(parts[1]));
           } else {
             System.out.println("Usage: :xG Lin");
+          }
+          break;
+
+        case ":XG":
+          if (parts.length >= 2) {
+            DeleteUntilLine(Integer.parseInt(parts[1]));
+          } else {
+            System.out.println("Usage: :XG Lin");
           }
           break;
 
