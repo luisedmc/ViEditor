@@ -331,6 +331,33 @@ public class Editor {
     System.out.println("Linhas até a linha " + line + " deletadas.");
   }
 
+  // :/ elemento - Display all lines containing the element
+  void Search(String element) {
+    if (!IsOpened()) {
+      System.out.println("Nenhum arquivo aberto!");
+      return;
+    }
+
+    Node currentNode = file.GetDLL().GetHead();
+    int lineNumber = 1;
+    boolean found = false;
+
+    System.out.println("Linhas contendo '" + element + "':");
+    while (currentNode != null) {
+      String line = currentNode.getData();
+      if (line.contains(element)) {
+        System.out.println("Linha " + lineNumber + ": " + line);
+        found = true;
+      }
+      currentNode = currentNode.getNext();
+      lineNumber++;
+    }
+
+    if (!found) {
+      System.out.println("Nenhuma linha contendo '" + element + "' encontrada.");
+    }
+  }
+
   // :ZZ
   void Save() {
     if (!isModified) {
@@ -451,6 +478,14 @@ public class Editor {
             DeleteUntilLine(Integer.parseInt(parts[1]));
           } else {
             System.out.println("Usage: :XG Lin");
+          }
+          break;
+
+        case ":/":
+          if (parts.length >= 2) {
+            Search(parts[1]);
+          } else {
+            System.out.println("Usage: :/ element");
           }
           break;
 
