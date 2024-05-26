@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.SCANNER;
 // Neste exemplo pedimos para o usuário digitar um dado
 class Main {
   public static void main(String[] args) {
