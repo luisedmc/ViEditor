@@ -331,7 +331,7 @@ public class Editor {
     System.out.println("Linhas até a linha " + line + " deletadas.");
   }
 
-  // :/ elemento - Display all lines containing the element
+  // :/ elem
   void Search(String element) {
     if (!IsOpened()) {
       System.out.println("Nenhum arquivo aberto!");
@@ -355,6 +355,74 @@ public class Editor {
 
     if (!found) {
       System.out.println("Nenhuma linha contendo '" + element + "' encontrada.");
+    }
+  }
+
+  // :/ elem elemChange - Substituir elem por elemChange em todas as linhas
+  void Replace(String element, String elementChange) {
+    if (!IsOpened()) {
+      System.out.println("Nenhum arquivo aberto!");
+      return;
+    }
+
+    Node currentNode = file.GetDLL().GetHead();
+    int lineNumber = 1;
+    boolean found = false;
+
+    while (currentNode != null) {
+      String line = currentNode.getData();
+      if (line.contains(element)) {
+        line = line.replace(element, elementChange);
+        currentNode.setData(line);
+        found = true;
+      }
+      currentNode = currentNode.getNext();
+      lineNumber++;
+    }
+
+    if (!found) {
+      System.out.println("Nenhuma linha contendo '" + element + "' encontrada.");
+    } else {
+      isModified = true;
+      System.out.println("Elemento substituído.");
+    }
+  }
+
+  // :/ elem elemChange Line - Substituir elem por elemChange na linha Line
+  void ReplaceLine(String element, String elementChange, int line) {
+    if (!IsOpened()) {
+      System.out.println("Nenhum arquivo aberto!");
+      return;
+    }
+
+    if (line <= 0 || line > file.GetFileSize()) {
+      System.out.println("Linha inválida!");
+      return;
+    }
+
+    Node currentNode = file.GetDLL().GetHead();
+    int lineNumber = 1;
+    boolean found = false;
+
+    while (currentNode != null) {
+      if (lineNumber == line) {
+        String lineData = currentNode.getData();
+        if (lineData.contains(element)) {
+          lineData = lineData.replace(element, elementChange);
+          currentNode.setData(lineData);
+          found = true;
+        }
+        break;
+      }
+      currentNode = currentNode.getNext();
+      lineNumber++;
+    }
+
+    if (!found) {
+      System.out.println("Nenhuma linha contendo '" + element + "' encontrada.");
+    } else {
+      isModified = true;
+      System.out.println("Elemento substituído.");
     }
   }
 
@@ -384,14 +452,24 @@ public class Editor {
         ":e nomeArq.ext - Abrir o arquivo de nome 'nomeArq.ext', armazenar cada linha em um Node da lista encadeada circular.");
     System.out.println(":w - Salvar o arquivo atual.");
     System.out.println(":w nomeArq.ext - Salvar o arquivo atual com o nome 'nomeArq.ext'.");
+    System.out.println(":wq - Salvar o arquivo atual e sair do editor.");
     System.out.println(":q! - Sair do editor sem salvar as modificações realizadas.");
+    System.out.println(":ZZ - Gravar conteúdo em arquivo, se alterado.");
     System.out.println(
         ":v LinIni LinFim - Selecionar as linhas de 'LinIni' a 'LinFim' para realizar operações de copiar ou cortar.");
+        System.out.println(":y - Copiar as linhas selecionadas.");
     System.out.println(":c - Cortar as linhas selecionadas.");
-    System.out.println(":y - Copiar as linhas selecionadas.");
     System.out.println(":p LinIniPaste - Colar as linhas copiadas após a linha 'LinIniPaste'.");
     System.out.println(":s - Exibir o conteúdo do arquivo de 10 em 10 linhas.");
     System.out.println(":s Lin - Exibir a linha 'Lin' do arquivo.");
+    System.out.println(":s LinIni LinFim - Exibir as linhas de 'LinIni' a 'LinFim' do arquivo de 10 em 10 linhas.");
+    System.out.println(":x Lin - Deletar a linha 'Lin' do arquivo.");
+    System.out.println(":xG Lin - Deletar as linhas a partir da linha 'Lin' do arquivo.");
+    System.out.println(":XG Lin - Deletar as linhas até a linha 'Lin' do arquivo.");
+    System.out.println(":/ elem - Buscar todas as linhas que contém 'elem'.");
+    System.out.println(":/ elem elemChange - Substituir 'elem' por 'elemChange' em todas as linhas.");
+    System.out.println(":/ elem elemChange Lin - Substituir 'elem' por 'elemChange' na linha 'Lin'.");
+    System.out.println(":help - Exibir os comandos disponíveis.");
 
     System.out.println();
   }
@@ -482,8 +560,12 @@ public class Editor {
           break;
 
         case ":/":
-          if (parts.length >= 2) {
+          if (parts.length == 2) {
             Search(parts[1]);
+          } else if (parts.length == 3) {
+            Replace(parts[1], parts[2]);
+          } else if (parts.length == 4) {
+            ReplaceLine(parts[1], parts[2], Integer.parseInt(parts[3]));
           } else {
             System.out.println("Usage: :/ element");
           }
