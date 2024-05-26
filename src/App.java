@@ -2,8 +2,7 @@
 
 public class App {
     public static void main(String[] args) throws Exception {
-        String filePath = "text.txt";
-        Editor e = new Editor(filePath);
+        Editor e = new Editor("");
         e.InitMenu();
     }
 }
