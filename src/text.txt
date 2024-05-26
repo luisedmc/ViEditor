@@ -3,9 +3,9 @@ import java.util.Scanner;
 class Main {
   public static void main(String[] args) {
     Scanner s = new Scanner(System.in);
-    System.out.print("Digite seu nome: ");
-    String nome = s.nextLine();
-    System.out.println("\nNome: " + nome);
+    System.out.print("Digite seu NOME: ");
+    String NOME = s.nextLine();
+    System.out.println("\nNome: " + NOME);
     s.close();
   }
 }

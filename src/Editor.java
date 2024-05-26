@@ -358,7 +358,7 @@ public class Editor {
     }
   }
 
-  // :/ elem elemChange - Substituir elem por elemChange em todas as linhas
+  // :/ elem elemChange
   void Replace(String element, String elementChange) {
     if (!IsOpened()) {
       System.out.println("Nenhum arquivo aberto!");
@@ -366,7 +366,7 @@ public class Editor {
     }
 
     Node currentNode = file.GetDLL().GetHead();
-    int lineNumber = 1;
+    // int lineNumber = 1;
     boolean found = false;
 
     while (currentNode != null) {
@@ -377,7 +377,7 @@ public class Editor {
         found = true;
       }
       currentNode = currentNode.getNext();
-      lineNumber++;
+      // lineNumber++;
     }
 
     if (!found) {
@@ -388,7 +388,7 @@ public class Editor {
     }
   }
 
-  // :/ elem elemChange Line - Substituir elem por elemChange na linha Line
+  // :/ elem elemChange Line
   void ReplaceLine(String element, String elementChange, int line) {
     if (!IsOpened()) {
       System.out.println("Nenhum arquivo aberto!");
